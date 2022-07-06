@@ -1,16 +1,15 @@
 const { Pizza, Comment } = require('../models');
-const { findOneAndUpdate } = require('../models/Comment');
 
 const commentController = {
-    // add comment to pizza
+   // add comment to pizza
     async addComment({params, body}, res) {
         try{
         console.log(body);
-        await Comment.create(body);
+        const commentCreate = await Comment.create(body);
 
         const commentData = await Pizza.findOneAndUpdate(
             { _id: params.pizzaId },
-            { $push: {comments: _id} },
+            { $push: {comments: commentCreate} },
             {new: true}
         )
         if (!commentData) {
@@ -23,6 +22,26 @@ const commentController = {
         }
   
     },
+
+    // addComment({ params, body }, res) {
+    //     console.log(body);
+    //     Comment.create(body)
+    //       .then(({ _id }) => {
+    //         return Pizza.findOneAndUpdate(
+    //           { _id: params.pizzaId },
+    //           { $push: { comments: _id } },
+    //           { new: true }
+    //         );
+    //       })
+    //       .then(dbPizzaData => {
+    //         if (!dbPizzaData) {
+    //           res.status(404).json({ message: 'No pizza found with this id!' });
+    //           return;
+    //         }
+    //         res.json(dbPizzaData);
+    //       })
+    //       .catch(err => res.json(err));
+    //   },
   
     // remove comment
     async removeComment({params}, res) {
@@ -32,7 +51,7 @@ const commentController = {
                 return res.status(404).json({ message: 'No comment with this id!' });
             }
             else{
-                const pizzaData = await findOneAndUpdate(
+                const pizzaData = await Pizza.findOneAndUpdate(
                     {_id: params.pizzaId},
                     {$pull: { comments: params.commentId } },
                     {new: true}
