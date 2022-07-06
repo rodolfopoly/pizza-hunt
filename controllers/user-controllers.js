@@ -2,73 +2,93 @@ const { User } = require('../models');
 
 const userController = {
   // the functions will go in here as methods
-  //get all pizza
+  //get all users
   async getAllUser(req, res) {
     try {
       const userData = await User.find({})
         .populate({
-          path: 'comments',
+          path: 'thoughts',
+          select: '-__v'
+        })
+        .populate({
+          path: 'friends',
           select: '-__v'
         })
         .select('-__v')
-        .sort({ _id: -1 })
+        .sort({ _id: -1 });
       res.json(userData);
     } catch (err) {
       console.log(err);
       res.status(400).json(err);
     }
   },
-  // get one pizza by id
-  async getPizzaById({ params }, res) {
+  // get one user by id
+  async getUserById({ params }, res) {
     try {
-      const pizzaData = await Pizza.findOne({ _id: params.id })
-      .populate({
-        path: 'comments',
-        select: '-__v'
-      })
-      .select('-__v')
+      const userData = await User.findOne({ _id: params.id })
+        .populate({
+          path: 'comments',
+          select: '-__v'
+        })
+        .populate({
+          path: 'friends',
+          select: '-__v'
+        })
+        .select('-__v');
       // If no pizza is found, send 404
-      if (!pizzaData) {
-        res.status(404).json({ message: 'No pizza found with this id!' });
+      if (!userData) {
+        res.status(404).json({ message: 'No user found with this id!' });
       }
-      else { res.json(pizzaData) };
+      else { res.json(userData) };
     } catch (err) {
       console.log(err);
       res.status(400).json(err);
     };
   },
-  //create a pizza
-  async createPizza({ body }, res) {
+  //create a user
+  async createUser({ body }, res) {
     try {
-      const pizzaData = await Pizza.create(body);
-      res.json(pizzaData);
+      const userData = await user.create(body);
+      res.json(userData);
     } catch (err) {
       console.log(err);
       res.status(400).json(err);
     }
   },
-  //update a pizza by id
-  async updatePizza({ params, body }, res) {
+  //update a user by id
+  async updateUser({ params, body }, res) {
     try {
-      const pizzaData = await Pizza.findOneAndUpdate({ _id: params.id }, body, { new: true });
-      if (!pizzaData) {
-        res.status(404).json({ message: 'No pizza found with this id!' });
+      const userData = await User.findOneAndUpdate(
+        { _id: params.id },
+        body,
+        { new: true })
+        .populate({
+          path: 'comments',
+          select: '-__v'
+        })
+        .populate({
+          path: 'friends',
+          select: '-__v'
+        })
+        .select('-__v');
+      if (!userData) {
+        res.status(404).json({ message: 'No user found with this id!' });
       }
-      else { res.json(pizzaData) };
+      else { res.json(userData) };
     } catch (err) {
       console.log(err);
       res.status(400).json(err);
     }
   },
-  //delete a pizza
-  async deletePizza({ params }, res) {
+  //delete a user
+  async deleteUser({ params }, res) {
     try {
-      const pizzaData = await Pizza.findOneAndDelete({ _id: params.id })
+      const userData = await User.findOneAndDelete({ _id: params.id })
       // If no pizza is found, send 404
-      if (!pizzaData) {
-        res.status(404).json({ message: 'No pizza found with this id!' });
+      if (!userData) {
+        res.status(404).json({ message: 'No user found with this id!' });
       }
-      else { res.json(pizzaData) };
+      else { res.json(userData) };
     } catch (err) {
       console.log(err);
       res.status(400).json(err);
