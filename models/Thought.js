@@ -11,7 +11,9 @@ const ThoughtSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-    get: (createdAtVal) => dateFormat(createdAtVal)
+    get: (createdAtVal) => {
+      if (createdAtVal) return createdAtVal.toISOString().split("T") [0];
+    },
   },
   username: {
     type: String,

@@ -73,8 +73,7 @@ const commentController = {
     //delete a thought
     async deleteThought({ params }, res) {
         try {
-            console.log(body);
-            const thoughtData = await Thought.findOneAndDelete({_id: params.thoughtId});
+            const thoughtData = await Thought.findOneAndDelete({ _id: params.thoughtId });
 
             const userData = await User.findOneAndUpdate(
                 { _id: params.userId },
@@ -96,7 +95,7 @@ const commentController = {
         try {
             const thoughtData = await Thought.findOneAndUpdate(
                 { _id: params.thoughtId },
-                {$push: { reactions: body } },
+                { $push: { reactions: body } },
                 { new: true })
                 .select('-__v');
             if (!thoughtData) {
@@ -114,7 +113,7 @@ const commentController = {
         try {
             const thoughtData = await Thought.findOneAndUpdate(
                 { _id: params.thoughtId },
-                {$pull: { reactions: params.reactionId } },
+                { $pull: { reactions: {reactionId: params.reactionId }} },
                 { new: true })
                 .select('-__v');
             if (!thoughtData) {

@@ -27,7 +27,7 @@ const userController = {
     try {
       const userData = await User.findOne({ _id: params.id })
         .populate({
-          path: 'comments',
+          path: 'thoughts',
           select: '-__v'
         })
         .populate({
@@ -48,7 +48,7 @@ const userController = {
   //create a user
   async createUser({ body }, res) {
     try {
-      const userData = await user.create(body);
+      const userData = await User.create(body);
       res.json(userData);
     } catch (err) {
       console.log(err);
@@ -63,7 +63,7 @@ const userController = {
         body,
         { new: true })
         .populate({
-          path: 'comments',
+          path: 'thoughts',
           select: '-__v'
         })
         .populate({
@@ -96,36 +96,36 @@ const userController = {
   },
   //add a new friend to a user's friend list
   async addFriend({ params }, res) {
-    try{
+    try {
       const userData = await User.findOneAndUpdate(
         { _id: params.userId },
         { $push: { friends: params.friendId } },
-        {new: true}
-        )
-        if (!userData) {
-          res.status(404).json({ message: 'No notebook found with this id!' });
-        }
-        else{res.json(userData);}
-      } catch(err){
-          console.log(err);
-          res.status(400).json(err);
+        { new: true }
+      )
+      if (!userData) {
+        res.status(404).json({ message: 'No notebook found with this id!' });
       }
+      else { res.json(userData); }
+    } catch (err) {
+      console.log(err);
+      res.status(400).json(err);
+    }
   },
   async deleteFriend({ params }, res) {
-    try{
+    try {
       const userData = await User.findOneAndUpdate(
         { _id: params.userId },
         { $pull: { friends: params.friendId } },
-        {new: true}
-        )
-        if (!userData) {
-          res.status(404).json({ message: 'No notebook found with this id!' });
-        }
-        else{res.json(userData);}
-      } catch(err){
-          console.log(err);
-          res.status(400).json(err);
+        { new: true }
+      )
+      if (!userData) {
+        res.status(404).json({ message: 'No notebook found with this id!' });
       }
+      else { res.json(userData); }
+    } catch (err) {
+      console.log(err);
+      res.status(400).json(err);
+    }
   }
 
 };

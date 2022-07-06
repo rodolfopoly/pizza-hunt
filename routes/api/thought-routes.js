@@ -16,7 +16,7 @@ router
 
 //Set up  POST at /api/thoughts/users/:userId
 router
-    .route('/users:userId')
+    .route('/users/:userId')
     .post(createThought);
 
 //Set up  Delete at /api/thoughts/:thoughtId/users/:userId
